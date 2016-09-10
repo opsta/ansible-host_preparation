@@ -1,0 +1,41 @@
+---
+- block: # Install latest kernel and check if it needs to reboot
+
+  - name: Install latest kernel from Xenial
+    apt:
+       pkg: "{{ item }}"
+       state: latest
+    with_items:
+      - linux-generic-lts-xenial
+
+  - name: Check if a reboot is required
+    stat:
+      path: /var/run/reboot-required
+      get_md5: no
+    register: file_reboot_required
+
+  - include: reboot.yml
+    when: |
+      file_reboot_required is defined and
+      file_reboot_required.stat.exists == true
+
+  tags:
+    - host-preparation-update-kernel
+
+- block: # Check to do autoremove and check if it needs to reboot again
+  - name: Do autoremove unused packages (in this case it is old kernel)
+    shell: DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
+
+  - name: Check if a reboot is required
+    stat:
+      path: /var/run/reboot-required
+      get_md5: no
+    register: file_reboot_required
+
+  - include: reboot.yml
+    when: |
+      file_reboot_required is defined and
+      file_reboot_required.stat.exists == true
+
+  tags:
+    - host-preparation-update-kernel

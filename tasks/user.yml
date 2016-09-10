@@ -1,0 +1,61 @@
+---
+- name: Set authorized_keys group paths variable
+  set_fact:
+    host_preparation_group_authorized_keys_paths: "{{ host_preparation_group_authorized_keys_paths }} + [ '{{ host_preparation_group_authorized_keys_path }}' ]"
+  with_items: "{{ group_names }}"
+  tags:
+    - host-preparation-configure-authorized_keys
+    - host-preparation-configure-user
+
+- name: Add global authorized_keys location variable
+  set_fact:
+    host_preparation_group_authorized_keys_paths: "{{ host_preparation_group_authorized_keys_paths }} + [ '{{ host_preparation_global_authorized_keys_path }}' ]"
+  tags:
+    - host-preparation-configure-authorized_keys
+    - host-preparation-configure-user
+
+# NOTE Add skip: true because there is a bug on Ansible 2.1.1.0 that won't skip
+# this task on the playbook level
+- name: Configure authorized_key
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ lookup('file', item) }}"
+    state: present
+    exclusive: yes
+  with_first_found:
+  - files: "{{ host_preparation_group_authorized_keys_paths }}"
+    skip: true
+  tags:
+    - host-preparation-configure-authorized_keys
+    - host-preparation-configure-user
+
+- name: Configure authorized_key for root user
+  authorized_key:
+    user: root
+    key: "{{ lookup('file', item) }}"
+    state: present
+    exclusive: yes
+  with_first_found:
+  - files: "{{ host_preparation_group_authorized_keys_paths }}"
+    skip: true
+  when: host_preparation_put_authorized_keys_to_root
+  tags:
+    - host-preparation-configure-authorized_keys
+    - host-preparation-configure-user
+
+# Need this fix
+# http://thornelabs.net/2014/04/01/ansible-fix-colon-syntax-error-for-sudoers-file.html
+- name: Configure sudoer file to not ask for password when use sudo
+  lineinfile:
+    "dest=/etc/sudoers
+    state=present
+    regexp='^%sudo\tALL='
+    line='%sudo\tALL=(ALL:ALL) NOPASSWD: ALL'
+    validate='visudo -cf %s'"
+  tags:
+    - host-preparation-configure-user
+
+- name: Delete password from logged in user
+  command: passwd -d {{ ansible_user }}
+  tags:
+    - host-preparation-configure-user

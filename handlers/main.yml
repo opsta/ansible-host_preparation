@@ -1,0 +1,10 @@
+---
+- name: Restart sshd service
+  service:
+    name: ssh
+    state: restarted
+  notify: Change Ansible ssh port
+
+- name: Change Ansible ssh port
+  set_fact:
+    ansible_port: "{{ host_preparation_sshd_port }}"

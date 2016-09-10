@@ -1,0 +1,41 @@
+---
+- block: # Reboot host
+  - name: Reboot target host
+    shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+    async: 1
+    poll: 0
+    ignore_errors: true
+    when: |
+      (file_reboot_required is defined and
+      file_reboot_required.stat.exists == true) or
+      host_preparation_need_reboot
+
+  - name: Wait SSH to stopped
+    become: false
+    wait_for:
+      host: "{{ ansible_host }}"
+      port: "{{ ansible_port }}"
+      state: stopped
+    delegate_to: 127.0.0.1
+    when: |
+      (file_reboot_required is defined and
+      file_reboot_required.stat.exists == true) or
+      host_preparation_need_reboot
+
+  - name: Wait to SSH again
+    become: false
+    wait_for:
+      host: "{{ ansible_host }}"
+      port: "{{ ansible_port }}"
+      timeout: "{{ host_preparation_reboot_timeout }}"
+      state: started
+      search_regex: OpenSSH
+    delegate_to: 127.0.0.1
+    when: |
+      (file_reboot_required is defined and
+      file_reboot_required.stat.exists == true) or
+      host_preparation_need_reboot
+
+  tags:
+    - host-preparation-tuning
+    - host-preparation-reboot

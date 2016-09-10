@@ -1,0 +1,23 @@
+---
+- block: # Change to use official repository and update all packages
+  - name: Change to use official Ubuntu repository
+    replace:
+      dest: /etc/apt/sources.list
+      regexp: 'http://(.*).archive\.ubuntu\.com/ubuntu/'
+      replace: 'http://archive.ubuntu.com/ubuntu/'
+
+  - name: Update packages to the latest version
+    apt:
+      upgrade: dist
+      update_cache: yes
+
+  tags:
+    - host-preparation-update-packages
+
+- name: Install base packages
+  apt:
+     pkg: "{{ item }}"
+     state: latest
+  with_items: "{{ host_preparation_base_packages }}"
+  tags:
+    - host-preparation-install-base-packages

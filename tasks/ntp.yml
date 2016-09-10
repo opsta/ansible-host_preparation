@@ -1,0 +1,21 @@
+---
+# TODO Remove current NTP server in ntp.conf and put list one
+
+- block: # Install NTP and configure it
+  - name: Install ntp packages
+    apt:
+       pkg: "{{ item }}"
+       state: latest
+    with_items:
+      - ntp
+
+  - name: Configure NTP
+    lineinfile:
+      dest: /etc/ntp.conf
+      state: present
+      regexp: '^server '
+      line: 'server {{ host_preparation_ntp_server }}'
+    when: host_preparation_ntp_server is not none
+
+  tags:
+    - host-preparation-configure-ntp

@@ -1,0 +1,15 @@
+---
+- block: # Configure hostname
+  - name: Configure hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: Configure hosts file
+    lineinfile:
+      dest: /etc/hosts
+      state: present
+      regexp: "^{{ ansible_host }} "
+      line: "{{ ansible_host }} {{ inventory_hostname }}"
+
+  tags:
+    - host-preparation-configure-hostname

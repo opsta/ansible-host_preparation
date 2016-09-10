@@ -1,0 +1,18 @@
+---
+- name: Change sshd port
+  lineinfile:
+    dest: "{{ host_preparation_sshd_config }}"
+    regexp: ^Port .*
+    line: "Port {{ host_preparation_sshd_port }}"
+  notify: Restart sshd service
+  tags:
+    - host-preparation-configure-sshd
+
+- name: Force to listen to only ssh ip address
+  lineinfile:
+    dest: "{{ host_preparation_sshd_config }}"
+    regexp: ^ListenAddress .*
+    line: "ListenAddress {{ ansible_host }}"
+  notify: Restart sshd service
+  tags:
+    - host-preparation-configure-sshd
