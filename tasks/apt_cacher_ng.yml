@@ -1,10 +1,17 @@
 ---
-- name: Configure apt-cacher-ng if needed
-  lineinfile:
-    dest: /etc/apt/apt.conf.d/11proxy
-    create: yes
-    regexp: '^Acquire::http::Proxy '
-    line: Acquire::http::Proxy "{{ host_preparation_apt_cacher_ng }}";
-  when: host_preparation_apt_cacher_ng is defined
+
+- block:
+  - name: Configure apt-cacher-ng if needed
+    lineinfile:
+      dest: /etc/apt/apt.conf.d/11proxy
+      create: yes
+      regexp: '^Acquire::http::Proxy '
+      line: Acquire::http::Proxy "{{ host_preparation_apt_cacher_ng }}";
+    when: host_preparation_apt_cacher_ng is defined
+
+  - name: Remove apt-cacher-ng
+    file: path=/etc/apt/apt.conf.d/11proxy state=absent
+    when: host_preparation_apt_cacher_ng is not defined
+
   tags:
     - host-preparation-apt-cacher-ng
