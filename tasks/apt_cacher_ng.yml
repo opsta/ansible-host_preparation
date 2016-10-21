@@ -10,7 +10,8 @@
     when: host_preparation_apt_cacher_ng is defined
 
   - name: Remove apt-cacher-ng
-    file: path=/etc/apt/apt.conf.d/11proxy state=absent
+    file: path=/etc/apt/apt.conf.d/11proxy 
+    state: absent
     when: host_preparation_apt_cacher_ng is not defined
 
   tags:
