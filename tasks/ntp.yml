@@ -2,6 +2,11 @@
 # TODO Remove current NTP server in ntp.conf and put list one
 
 - block: # Install NTP and configure it
+
+  - name: Configure timezone
+    timezone:
+      name: "{{ host_preparation_timezone }}"
+
   - name: Install ntp packages
     apt:
        pkg: "{{ item }}"
