@@ -13,6 +13,7 @@
     dest: "{{ host_preparation_sshd_config }}"
     regexp: ^ListenAddress .*
     line: "ListenAddress {{ ansible_host }}"
+  when: host_preparation_sshd_listen_only_ssh_interface
   notify: Restart sshd service
   tags:
     - host-preparation-configure-sshd
