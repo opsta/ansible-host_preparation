@@ -34,6 +34,7 @@ host_preparation_base_packages:
   - iotop
   - sysstat
   - iftop
+host_preparation_is_config_hostname: false
 host_preparation_is_tuning: false
 host_preparation_sysctl_vars:
   - { regexp: '^fs\.file-max \= ', line: 'fs.file-max = 1000000' }

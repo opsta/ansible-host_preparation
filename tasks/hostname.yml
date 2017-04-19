@@ -3,6 +3,7 @@
   - name: Configure hostname
     hostname:
       name: "{{ inventory_hostname }}"
+    when: host_preparation_is_config_hostname
 
   - name: Configure hosts file
     lineinfile:
@@ -10,6 +11,7 @@
       state: present
       regexp: "^{{ ansible_host }} "
       line: "{{ ansible_host }} {{ inventory_hostname }}"
+    when: host_preparation_is_config_hostname
 
   tags:
     - host-preparation-configure-hostname
