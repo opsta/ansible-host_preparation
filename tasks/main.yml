@@ -1,7 +1,6 @@
 ---
 - include: apt_cacher_ng.yml
 - include: packages.yml
-- include: ntp.yml
 - include: hostname.yml
 - include: kernel.yml
 - include: tuning.yml

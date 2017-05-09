@@ -4,8 +4,6 @@ host_preparation_role_name: host_preparation
 #host_preparation_apt_cacher_ng: apt-cacher-ng.example.com
 host_preparation_need_reboot: false
 host_preparation_reboot_timeout: 600
-host_preparation_ntp_server: ntp.ubuntu.com
-host_preparation_timezone: Etc/UTC
 host_preparation_sshd_config: /etc/ssh/sshd_config
 host_preparation_sshd_port: 22
 host_preparation_group_authorized_keys_path: "{{ playbook_dir }}/files/groups/{{ item }}/{{ host_preparation_role_name }}/authorized_keys"
