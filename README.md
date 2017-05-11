@@ -86,7 +86,7 @@ Since Ubuntu Xenial did't come with python 2 by default. So playbook need to ins
   become: true
   pre_tasks:
     - name: Install Python 2 first
-      raw: python --version || apt-get update && apt-get install -y python
+      raw: python --version || apt update && apt install -y python
   roles:
     - winggundamth.host_preparation
   vars_files:

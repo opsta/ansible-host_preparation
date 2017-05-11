@@ -24,7 +24,7 @@
 
 - block: # Check to do autoremove and check if it needs to reboot again
   - name: Do autoremove unused packages (in this case it is old kernel)
-    shell: DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
+    shell: DEBIAN_FRONTEND=noninteractive apt -y autoremove
 
   - name: Check if a reboot is required
     stat:
