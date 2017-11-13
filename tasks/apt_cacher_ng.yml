@@ -7,13 +7,13 @@
       create: yes
       regexp: '^Acquire::http::Proxy '
       line: Acquire::http::Proxy "{{ host_preparation_apt_cacher_ng }}";
-    when: host_preparation_apt_cacher_ng is defined
+    when: host_preparation_apt_cacher_ng is not none
 
   - name: Remove apt-cacher-ng
     file:
       path: /etc/apt/apt.conf.d/11proxy 
       state: absent
-    when: host_preparation_apt_cacher_ng is not defined
+    when: host_preparation_apt_cacher_ng is none
 
   tags:
     - host-preparation-apt-cacher-ng
