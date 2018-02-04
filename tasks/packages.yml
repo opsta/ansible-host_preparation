@@ -5,6 +5,7 @@
       dest: /etc/apt/sources.list
       regexp: 'http://(.*).archive\.ubuntu\.com/ubuntu/'
       replace: 'http://archive.ubuntu.com/ubuntu/'
+    when: host_preparation_change_to_ubuntu_official_repository
 
   - name: Update packages to the latest version
     apt:
