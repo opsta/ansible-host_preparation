@@ -1,4 +1,7 @@
 ---
+host_preparation_change_to_ubuntu_official_repository: false
+host_preparation_install_latest_kernel: false
+
 host_preparation_role_name: host_preparation
 
 #host_preparation_apt_cacher_ng: apt-cacher-ng.example.com

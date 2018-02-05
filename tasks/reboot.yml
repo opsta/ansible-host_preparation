@@ -14,7 +14,7 @@
     become: false
     wait_for:
       host: "{{ ansible_host }}"
-      port: "{{ ansible_port }}"
+      port: "{{ ansible_port | default(22) }}"
       state: stopped
     delegate_to: 127.0.0.1
     when: |
@@ -26,7 +26,7 @@
     become: false
     wait_for:
       host: "{{ ansible_host }}"
-      port: "{{ ansible_port }}"
+      port: "{{ ansible_port | default(22) }}"
       timeout: "{{ host_preparation_reboot_timeout }}"
       state: started
       search_regex: OpenSSH
