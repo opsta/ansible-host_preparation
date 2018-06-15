@@ -48,6 +48,7 @@
     regexp='^%sudo\tALL='
     line='%sudo\tALL=(ALL:ALL) NOPASSWD: ALL'
     validate='visudo -cf %s'"
+  when: host_preparation_remove_sudo_password or host_preparation_configure_authorized_keys.changed
   tags:
     - host-preparation-configure-user
 
