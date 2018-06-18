@@ -6,7 +6,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     with_items: "{{ host_preparation_limits_vars }}"
-    when: host_preparation_is_tuning
+    when: host_preparation_is_tuning and host_preparation_limits_vars is defined
     register: host_preparation_configure_security_limits
 
   - name: Configure sysctl.conf
@@ -16,7 +16,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     with_items: "{{ host_preparation_sysctl_vars }}"
-    when: host_preparation_is_tuning
+    when: host_preparation_is_tuning and host_preparation_sysctl_vars is defined
     register: host_preparation_configure_sysctl
 
   - name: Tuning hugepage
@@ -27,7 +27,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     with_items: "{{ host_preparation_rc_vars }}"
-    when: host_preparation_is_tuning
+    when: host_preparation_is_tuning and host_preparation_rc_vars is defined
     register: host_preparation_configure_hugepage
 
   - name: Check if server need to reboot
