@@ -17,8 +17,7 @@
 
 - name: Install base packages
   apt:
-     pkg: "{{ item }}"
+     name: "{{ host_preparation_base_packages }}"
      state: latest
-  with_items: "{{ host_preparation_base_packages }}"
   tags:
     - host-preparation-install-base-packages
