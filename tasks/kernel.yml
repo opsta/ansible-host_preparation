@@ -3,10 +3,9 @@
 
   - name: Install latest kernel from Xenial
     apt:
-       pkg: "{{ item }}"
+       name:
+         - linux-generic-lts-xenial
        state: latest
-    with_items:
-      - linux-generic-lts-xenial
     when: host_preparation_install_latest_kernel
 
   - name: Check if a reboot is required
