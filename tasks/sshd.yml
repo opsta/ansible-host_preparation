@@ -4,6 +4,7 @@
     dest: "{{ host_preparation_sshd_config }}"
     regexp: ^Port .*
     line: "Port {{ host_preparation_sshd_port }}"
+  when: host_preparation_is_config_sshd
   notify: Restart sshd service
   tags:
     - host-preparation-configure-sshd
