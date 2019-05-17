@@ -5,8 +5,11 @@ host_preparation_install_latest_kernel: false
 host_preparation_role_name: host_preparation
 
 #host_preparation_apt_cacher_ng: apt-cacher-ng.example.com
+# Using reboot module on Ansible >=2.7 and manual method for Ansible <2.7
 host_preparation_need_reboot: false
 host_preparation_reboot_timeout: 600
+# Post reboot delay for reboot module on Ansible >=2.7 only
+host_preparation_reboot_post_delay: 60
 host_preparation_is_config_sshd: false
 host_preparation_sshd_config: /etc/ssh/sshd_config
 host_preparation_sshd_port: 22
