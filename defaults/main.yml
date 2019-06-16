@@ -19,6 +19,8 @@ host_preparation_global_authorized_keys_path: "{{ playbook_dir }}/files/authoriz
 host_preparation_put_authorized_keys_to_root: false
 host_preparation_remove_sudo_password: false
 host_preparation_base_packages:
+  - python-apt
+  - aptitude
   - htop
   - iotop
   - sysstat
