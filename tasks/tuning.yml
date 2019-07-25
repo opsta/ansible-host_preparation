@@ -19,6 +19,20 @@
     when: host_preparation_is_tuning and host_preparation_sysctl_vars is defined
     register: host_preparation_configure_sysctl
 
+  - name: Checking rc.local
+    stat:
+      path: /etc/rc.local
+    register: rc
+  
+  - name: Create new rc.local
+    template:
+      src: rc.local.j2
+      dest: /etc/rc.local
+      owner: root
+      group: root
+      mode: 0755
+    when: not rc.stat.exists
+
   - name: Tuning hugepage
     lineinfile:
       dest: /etc/rc.local
