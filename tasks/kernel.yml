@@ -6,7 +6,7 @@
        name:
          - linux-generic-lts-xenial
        state: latest
-    when: host_preparation_install_latest_kernel
+    when: host_preparation_install_latest_kernel | bool
 
   - name: Check if a reboot is required
     stat:

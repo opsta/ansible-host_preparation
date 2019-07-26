@@ -6,33 +6,28 @@
       host_preparation_group_authorized_keys_paths: "{{ host_preparation_group_authorized_keys_paths }} + [ '{{ host_preparation_group_authorized_keys_path }}' ]"
     with_items: "{{ group_names }}"
 
-  - name: Add global authorized_keys location variable
+  - name: Searching for authorized_keys files location and set fact for first found
     set_fact:
-      host_preparation_group_authorized_keys_paths: "{{ host_preparation_group_authorized_keys_paths }} + [ '{{ host_preparation_global_authorized_keys_path }}' ]"
+      host_preparation_authorized_key_file: "{{lookup('first_found', host_preparation_group_authorized_keys_paths + [host_preparation_global_authorized_keys_path], errors='ignore')}}"
 
-  # NOTE Add skip: true because there is a bug on Ansible 2.1.1.0 that won't skip
-  # this task on the playbook level
   - name: Configure authorized_key
     authorized_key:
       user: "{{ ansible_user }}"
-      key: "{{ lookup('file', item) }}"
+      key: "{{ lookup('file', host_preparation_authorized_key_file) }}"
       state: present
       exclusive: yes
-    with_first_found:
-    - files: "{{ host_preparation_group_authorized_keys_paths }}"
-      skip: true
+    when: host_preparation_authorized_key_file is not none
     register: host_preparation_configure_authorized_keys
 
   - name: Configure authorized_key for root user
     authorized_key:
       user: root
-      key: "{{ lookup('file', item) }}"
+      key: "{{ lookup('file', host_preparation_authorized_key_file) }}"
       state: present
       exclusive: yes
-    with_first_found:
-    - files: "{{ host_preparation_group_authorized_keys_paths }}"
-      skip: true
-    when: host_preparation_put_authorized_keys_to_root
+    when:
+      - host_preparation_put_authorized_keys_to_root | bool
+      - host_preparation_authorized_key_file is not none
 
   tags:
     - host-preparation-configure-authorized_keys
