@@ -43,6 +43,7 @@
     reboot:
       post_reboot_delay: "{{ host_preparation_reboot_post_delay }}"
     when: |
+      ansible_virtualization_type != 'lxc' and
       ansible_version.full is version_compare('2.7', '>=') and
       ((file_reboot_required is defined and
       file_reboot_required.stat.exists == true) or

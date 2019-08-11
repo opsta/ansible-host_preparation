@@ -8,7 +8,7 @@
 
   - name: Searching for authorized_keys files location and set fact for first found
     set_fact:
-      host_preparation_authorized_key_file: "{{lookup('first_found', host_preparation_group_authorized_keys_paths + [host_preparation_global_authorized_keys_path], errors='ignore')}}"
+      host_preparation_authorized_key_file: "{{ lookup('first_found', host_preparation_group_authorized_keys_paths + [host_preparation_global_authorized_keys_path], errors='ignore') }}"
 
   - name: Configure authorized_key
     authorized_key:
@@ -16,7 +16,7 @@
       key: "{{ lookup('file', host_preparation_authorized_key_file) }}"
       state: present
       exclusive: yes
-    when: host_preparation_authorized_key_file is not none
+    when: host_preparation_authorized_key_file != ""
     register: host_preparation_configure_authorized_keys
 
   - name: Configure authorized_key for root user
@@ -27,7 +27,7 @@
       exclusive: yes
     when:
       - host_preparation_put_authorized_keys_to_root | bool
-      - host_preparation_authorized_key_file is not none
+      - host_preparation_authorized_key_file != ""
 
   tags:
     - host-preparation-configure-authorized_keys
