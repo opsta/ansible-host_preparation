@@ -1,4 +1,5 @@
 ---
+- setup: 
 - import_tasks: apt_cacher_ng.yml
 - import_tasks: packages.yml
 - import_tasks: hostname.yml
@@ -7,4 +8,3 @@
 - import_tasks: reboot.yml
 - import_tasks: sshd.yml
 - import_tasks: user.yml
-
