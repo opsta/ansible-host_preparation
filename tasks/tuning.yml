@@ -19,16 +19,27 @@
     when: host_preparation_is_tuning and host_preparation_sysctl_vars is defined
     register: host_preparation_configure_sysctl
 
-  - name: Create new rc.local
+  - name: Create new rc.local (Ubuntu/Debian)
     template:
-      src: rc.local.j2
+      src: rc.local.ubuntu.j2
       dest: /etc/rc.local
       owner: root
       group: root
       mode: 0755
       force: no
+    when: ansible_os_family == 'Debian'
 
-  - name: Tuning hugepage
+  - name: Create new rc.local (CentOS/RHEL)
+    template:
+      src: rc.local.rhel.j2
+      dest: /etc/rc.d/rc.local
+      owner: root
+      group: root
+      mode: 0755
+      force: no
+    when: ansible_os_family == 'RedHat'
+
+  - name: Tuning hugepage (Ubuntu/Debian)
     lineinfile:
       dest: /etc/rc.local
       state: present
@@ -36,7 +47,23 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
     with_items: "{{ host_preparation_rc_vars }}"
-    when: host_preparation_is_tuning and host_preparation_rc_vars is defined
+    when:
+      - host_preparation_is_tuning
+      - host_preparation_rc_vars is defined
+      - ansible_os_family == 'Debian'
+    register: host_preparation_configure_hugepage
+
+  - name: Tuning hugepage (CentOS/RHEL)
+    lineinfile:
+      dest: /etc/rc.d/rc.local
+      state: present
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items: "{{ host_preparation_rc_vars }}"
+    when:
+      - host_preparation_is_tuning
+      - host_preparation_rc_vars is defined
+      - ansible_os_family == 'RedHat'
     register: host_preparation_configure_hugepage
 
   - name: Check if server need to reboot
