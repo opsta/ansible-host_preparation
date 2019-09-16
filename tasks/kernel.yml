@@ -34,7 +34,7 @@
   - include_tasks: reboot.yml
     when: |
       ubuntu_reboot_required.stat.exists is defined and ubuntu_reboot_required.stat.exists == true or
-      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == true
+      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == 1
 
   tags:
     - host-preparation-update-kernel
@@ -60,7 +60,7 @@
   - include_tasks: reboot.yml
     when: |
       ubuntu_reboot_required.stat.exists is defined and ubuntu_reboot_required.stat.exists == true or
-      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == true
+      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == 1
 
   tags:
     - host-preparation-update-kernel
