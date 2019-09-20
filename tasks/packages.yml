@@ -41,9 +41,18 @@
   tags:
     - host-preparation-update-packages
 
-- name: Install base packages
+- name: Install base packages (Ubuntu/Debian)
   package:
-     name: "{{ host_preparation_base_packages }}"
+     name: "{{ host_preparation_base_packages }} + {{ host_preparation_base_packages_ubuntu }}"
      state: latest
+  when: ansible_os_family == 'Debian'
+  tags:
+    - host-preparation-install-base-packages
+
+- name: Install base packages (CentOS/RHEL)
+  package:
+     name: "{{ host_preparation_base_packages }} + {{ host_preparation_base_packages_rhel }}"
+     state: latest
+  when: ansible_os_family == 'RedHat'
   tags:
     - host-preparation-install-base-packages

@@ -10,15 +10,6 @@
       - host_preparation_install_latest_kernel | bool
       - ansible_distribution_release == 'xenial'
 
-  - name: Install latest kernel from Bionic
-    package:
-       name:
-         - linux-generic
-       state: latest
-    when:
-      - host_preparation_install_latest_kernel | bool
-      - ansible_distribution_release == 'bionic'
-
   - name: Check if a reboot is required (Ubuntu/Debian)
     stat:
       path: /var/run/reboot-required
@@ -29,6 +20,7 @@
   - name: Check if a reboot is required (CentOS/RHEL)
     command: '/bin/needs-restarting -r'
     ignore_errors: True
+    when: ansible_os_family == 'RedHat'
     register: rhel_reboot_required
 
   - include_tasks: reboot.yml
@@ -55,6 +47,7 @@
   - name: Check if a reboot is required (CentOS/RHEL)
     command: '/bin/needs-restarting -r'
     ignore_errors: True
+    when: ansible_os_family == 'RedHat'
     register: rhel_reboot_required
 
   - include_tasks: reboot.yml
