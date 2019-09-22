@@ -2,40 +2,58 @@
 - block: # Install latest kernel and check if it needs to reboot
 
   - name: Install latest kernel from Xenial
-    apt:
+    package:
        name:
          - linux-generic-lts-xenial
        state: latest
-    when: host_preparation_install_latest_kernel | bool
+    when:
+      - host_preparation_install_latest_kernel | bool
+      - ansible_distribution_release == 'xenial'
 
-  - name: Check if a reboot is required
+  - name: Check if a reboot is required (Ubuntu/Debian)
     stat:
       path: /var/run/reboot-required
       get_md5: no
-    register: file_reboot_required
+    when: ansible_os_family == 'Debian'
+    register: ubuntu_reboot_required
+
+  - name: Check if a reboot is required (CentOS/RHEL)
+    command: '/bin/needs-restarting -r'
+    ignore_errors: True
+    when: ansible_os_family == 'RedHat'
+    register: rhel_reboot_required
 
   - include_tasks: reboot.yml
     when: |
-      file_reboot_required is defined and
-      file_reboot_required.stat.exists == true
+      ubuntu_reboot_required.stat.exists is defined and ubuntu_reboot_required.stat.exists == true or
+      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == 1
 
   tags:
     - host-preparation-update-kernel
 
 - block: # Check to do autoremove and check if it needs to reboot again
   - name: Do autoremove unused packages (in this case it is old kernel)
-    shell: DEBIAN_FRONTEND=noninteractive apt -y autoremove
+    apt:
+      autoremove: yes
+    when: ansible_os_family == 'Debian'
 
-  - name: Check if a reboot is required
+  - name: Check if a reboot is required (Ubuntu/Debian)
     stat:
       path: /var/run/reboot-required
       get_md5: no
-    register: file_reboot_required
+    when: ansible_os_family == 'Debian'
+    register: ubuntu_reboot_required
+
+  - name: Check if a reboot is required (CentOS/RHEL)
+    command: '/bin/needs-restarting -r'
+    ignore_errors: True
+    when: ansible_os_family == 'RedHat'
+    register: rhel_reboot_required
 
   - include_tasks: reboot.yml
     when: |
-      file_reboot_required is defined and
-      file_reboot_required.stat.exists == true
+      ubuntu_reboot_required.stat.exists is defined and ubuntu_reboot_required.stat.exists == true or
+      rhel_reboot_required.rc is defined and rhel_reboot_required.rc == 1
 
   tags:
     - host-preparation-update-kernel

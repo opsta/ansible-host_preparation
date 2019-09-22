@@ -5,19 +5,54 @@
       dest: /etc/apt/sources.list
       regexp: 'http://(.*).archive\.ubuntu\.com/ubuntu/'
       replace: 'http://archive.ubuntu.com/ubuntu/'
-    when: host_preparation_change_to_ubuntu_official_repository | bool
+    when:
+      - host_preparation_change_to_ubuntu_official_repository | bool
+      - ansible_distribution == 'Ubuntu'
 
-  - name: Update packages to the latest version
+  - name: Add EPEL repository (CentOS/RHEL)
+    yum_repository:
+      name: epel
+      description: EPEL YUM repo
+      baseurl: "{{ host_preparation_epel_repository_url }}"
+    when:
+      - host_preparation_epel_enabled | bool
+      - ansible_os_family == 'RedHat'
+
+  - name: Add EPEL GPG key (CentOS/RHEL)
+    rpm_key:
+      state: present
+      key: "{{ host_preparation_epel_gpg_key_url }}"
+    when:
+      - host_preparation_epel_enabled | bool
+      - ansible_os_family == 'RedHat'
+
+  - name: Update packages to the latest version (Ubuntu/Debian)
     apt:
       upgrade: dist
       update_cache: yes
+    when: ansible_os_family == 'Debian'
+
+  - name: Update packages to the latest version (CentOS/RHEL)
+    yum:
+      name: '*'
+      state: latest
+    when: ansible_os_family == 'RedHat'
 
   tags:
     - host-preparation-update-packages
 
-- name: Install base packages
-  apt:
-     name: "{{ host_preparation_base_packages }}"
+- name: Install base packages (Ubuntu/Debian)
+  package:
+     name: "{{ host_preparation_base_packages }} + {{ host_preparation_base_packages_ubuntu }}"
      state: latest
+  when: ansible_os_family == 'Debian'
+  tags:
+    - host-preparation-install-base-packages
+
+- name: Install base packages (CentOS/RHEL)
+  package:
+     name: "{{ host_preparation_base_packages }} + {{ host_preparation_base_packages_rhel }}"
+     state: latest
+  when: ansible_os_family == 'RedHat'
   tags:
     - host-preparation-install-base-packages

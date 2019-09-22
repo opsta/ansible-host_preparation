@@ -1,10 +1,12 @@
 ---
-- setup: 
+- setup:
 - import_tasks: apt_cacher_ng.yml
+  when: ansible_os_family == 'Debian'
 - import_tasks: packages.yml
 - import_tasks: hostname.yml
 - import_tasks: kernel.yml
 - import_tasks: tuning.yml
 - import_tasks: reboot.yml
+  when: host_preparation_need_reboot 
 - import_tasks: sshd.yml
 - import_tasks: user.yml

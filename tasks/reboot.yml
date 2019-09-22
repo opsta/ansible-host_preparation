@@ -5,11 +5,7 @@
     async: 1
     poll: 0
     ignore_errors: true
-    when: |
-      ansible_version.full is version_compare('2.7', '<') and
-      ((file_reboot_required is defined and
-      file_reboot_required.stat.exists == true) or
-      host_preparation_need_reboot)
+    when: ansible_version.full is version_compare('2.7', '<')
 
   - name: (Ansible < 2.7) Wait SSH to stopped
     become: false
@@ -18,11 +14,7 @@
       port: "{{ ansible_port | default(22) }}"
       state: stopped
     delegate_to: 127.0.0.1
-    when: |
-      ansible_version.full is version_compare('2.7', '<') and
-      ((file_reboot_required is defined and
-      file_reboot_required.stat.exists == true) or
-      host_preparation_need_reboot)
+    when: ansible_version.full is version_compare('2.7', '<')
 
   - name: (Ansible < 2.7) Wait to SSH again
     become: false
@@ -33,21 +25,14 @@
       state: started
       search_regex: OpenSSH
     delegate_to: 127.0.0.1
-    when: |
-      ansible_version.full is version_compare('2.7', '<') and
-      ((file_reboot_required is defined and
-      file_reboot_required.stat.exists == true) or
-      host_preparation_need_reboot)
+    when: ansible_version.full is version_compare('2.7', '<')
 
   - name: (Ansible >= 2.7) Reboot
     reboot:
       post_reboot_delay: "{{ host_preparation_reboot_post_delay }}"
-    when: |
-      ansible_virtualization_type != 'lxc' and
-      ansible_version.full is version_compare('2.7', '>=') and
-      ((file_reboot_required is defined and
-      file_reboot_required.stat.exists == true) or
-      host_preparation_need_reboot)
+    when:
+      - ansible_virtualization_type != 'lxc'
+      - ansible_version.full is version_compare('2.7', '>=')
 
   tags:
     - host-preparation-tuning

@@ -1,6 +1,12 @@
 ---
+# Debian/Ubuntu
 host_preparation_change_to_ubuntu_official_repository: false
 host_preparation_install_latest_kernel: false
+
+# CentOS/RHEL
+host_preparation_epel_enabled: true
+host_preparation_epel_repository_url: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+host_preparation_epel_gpg_key_url: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 
 host_preparation_role_name: host_preparation
 
@@ -19,12 +25,15 @@ host_preparation_global_authorized_keys_path: "{{ playbook_dir }}/files/authoriz
 host_preparation_put_authorized_keys_to_root: false
 host_preparation_remove_sudo_password: false
 host_preparation_base_packages:
-  - python-apt
-  - aptitude
   - htop
   - iotop
   - sysstat
   - iftop
+host_preparation_base_packages_ubuntu:
+  - python-apt
+  - aptitude
+host_preparation_base_packages_rhel:
+  - yum-utils
 
 host_preparation_is_config_hostname: false
 
@@ -52,7 +61,6 @@ host_preparation_sysctl_vars:
 host_preparation_rc_vars:
   - { regexp: '^echo never > /sys/kernel/mm/transparent_hugepage/enabled', line: 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' }
   - { regexp: '^echo never > /sys/kernel/mm/transparent_hugepage/defrag', line: 'echo never > /sys/kernel/mm/transparent_hugepage/defrag' }
-  - { regexp: '^ip link set eth0 txqueuelen ', line: 'ip link set eth0 txqueuelen 5000' }
 host_preparation_limits_vars:
   - { regexp: '^\* soft nofile ', line: '* soft nofile 1000000' }
   - { regexp: '^\* hard nofile ', line: '* hard nofile 1000000' }
