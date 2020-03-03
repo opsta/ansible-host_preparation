@@ -1,21 +1,23 @@
 ---
 - block: # Performance Tuning
   - name: Configure security limits
-    lineinfile:
-      dest: /etc/security/limits.conf
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
+    pam_limits:
+      domain: "{{ item.domain }}"
+      limit_type: "{{ item.limit_type }}"
+      limit_item: "{{ item.limit_item }}"
+      value: "{{ item.value }}"
     with_items: "{{ host_preparation_limits_vars }}"
     when: host_preparation_is_tuning and host_preparation_limits_vars is defined
     register: host_preparation_configure_security_limits
 
-  - name: Configure sysctl.conf
-    lineinfile:
-      dest: /etc/sysctl.conf
+  - name: Configure tunning in sysctl.conf
+    sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      sysctl_set: yes
       state: present
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-    with_items: "{{ host_preparation_sysctl_vars }}"
+      reload: yes
+    with_dict: "{{ host_preparation_sysctl_vars }}"
     when: host_preparation_is_tuning and host_preparation_sysctl_vars is defined
     register: host_preparation_configure_sysctl
 
