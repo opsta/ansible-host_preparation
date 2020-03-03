@@ -17,7 +17,7 @@
     with_items: "{{ host_preparation_modprobe_vars }}"
     when: host_preparation_is_tuning and host_preparation_modprobe_vars is defined
 
-  - name: Configure tunning in sysctl.conf
+  - name: Configure tuning in sysctl.conf
     sysctl:
       name: "{{ item.key }}"
       value: "{{ item.value }}"
