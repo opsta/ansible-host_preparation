@@ -68,3 +68,5 @@ host_preparation_limits_vars:
   - { regexp: '^\* hard nproc ', line: '* hard nproc 393216' }
 
 host_preparation_sshd_listen_only_ssh_interface: false
+
+host_preparation_default_locale: en_US.UTF-8
