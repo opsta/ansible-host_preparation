@@ -1,0 +1,8 @@
+---
+- name: Ensure the locale exists
+  locale_gen:
+    name: "{{ host_preparation_default_locale }}"
+    state: present
+
+- name: set as default locale
+  command: "localectl set-locale LANG={{ host_preparation_default_locale }}"

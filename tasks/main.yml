@@ -3,6 +3,7 @@
 - import_tasks: apt_cacher_ng.yml
   when: ansible_os_family == 'Debian'
 - import_tasks: packages.yml
+- import_tasks: locale.yml
 - import_tasks: hostname.yml
 - import_tasks: kernel.yml
 - import_tasks: tuning.yml
