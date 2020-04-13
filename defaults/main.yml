@@ -30,7 +30,7 @@ host_preparation_base_packages:
   - sysstat
   - iftop
 host_preparation_base_packages_ubuntu:
-  - python3-apt
+  - "{{ 'python3-apt' if ansible_python.version.major == 3 else 'python-apt' }}"
   - aptitude
 host_preparation_base_packages_rhel:
   - yum-utils
