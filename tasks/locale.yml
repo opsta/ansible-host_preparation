@@ -1,8 +1,9 @@
 ---
-- name: Ensure the locale exists
+- name: Ensure the locale exists (Ubuntu/Debian)
   locale_gen:
     name: "{{ host_preparation_default_locale }}"
     state: present
+  when: ansible_os_family == 'Debian'
 
 - name: set as default locale
   command: "localectl set-locale LANG={{ host_preparation_default_locale }}"
