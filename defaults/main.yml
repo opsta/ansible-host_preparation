@@ -3,14 +3,17 @@
 host_preparation_change_to_ubuntu_official_repository: false
 host_preparation_install_latest_kernel: false
 
-# CentOS/RHEL
+# CentOS/RHEL 7
 host_preparation_epel_enabled: true
 host_preparation_epel_repository_url: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
 host_preparation_epel_gpg_key_url: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+# CentOS/RHEL 8
+# host_preparation_epel_repository_url: https://dl.fedoraproject.org/pub/epel/$releasever/Everything/$basearch/
+# host_preparation_epel_gpg_key_url: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
 
 host_preparation_role_name: host_preparation
 
-#host_preparation_apt_cacher_ng: apt-cacher-ng.example.com
+# host_preparation_apt_cacher_ng: apt-cacher-ng.example.com
 # Using reboot module on Ansible >=2.7 and manual method for Ansible <2.7
 host_preparation_need_reboot: false
 host_preparation_reboot_timeout: 600
