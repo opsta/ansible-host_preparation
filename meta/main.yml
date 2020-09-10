@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: host_preparation
   author: Jirayut Nimsaeng
   description: Ansible role to prepare Ubuntu host.
   license: MIT
