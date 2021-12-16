@@ -1,12 +1,12 @@
 ---
-- name: Restart sshd service (Debian/Ubuntu)
+- name: Restart sshd service
   service:
     name: ssh
     state: restarted
   when: ansible_os_family == 'Debian'
   notify: Change Ansible ssh port
 
-- name: Restart sshd service (CentOS/RHEL)
+- name: Restart sshd service
   service:
     name: sshd
     state: restarted
