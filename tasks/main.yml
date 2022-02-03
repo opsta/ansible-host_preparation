@@ -1,6 +1,6 @@
 ---
 - setup:
-  - tags: always
+  tags: always
 - import_tasks: apt_cacher_ng.yml
   when: ansible_os_family == 'Debian'
 - import_tasks: packages.yml
